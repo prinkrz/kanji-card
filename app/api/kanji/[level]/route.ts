@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { kanjiList } from "@/app/data/kanji";
 
+export const dynamic = "force-static";
+
+export function generateStaticParams() {
+  return ["n5", "n4", "n3", "n2", "n1", "all"].map((level) => ({ level }));
+}
+
 const VALID_LEVELS = new Set(["n5", "n4", "n3", "n2", "n1", "all"]);
 
 export async function GET(
