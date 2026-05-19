@@ -1,11 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { kanjiList } from "@/app/data/kanji";
-import FlashCard from "@/app/components/FlashCard";
-
-export async function generateStaticParams() {
-  return kanjiList.map((_, index) => ({ id: String(index) }));
-}
+import KanjiView from "./KanjiView";
 
 export async function generateMetadata({
   params,
@@ -32,44 +28,21 @@ export default async function KanjiPage({
 
   if (!kanji) notFound();
 
-  const prev = index > 0 ? index - 1 : null;
-  const next = index < kanjiList.length - 1 ? index + 1 : null;
-
   return (
-    <main className="mx-auto w-full max-w-lg px-6 py-12">
-      {/* Nav */}
-      <div className="mb-8 flex items-center justify-between text-sm text-zinc-500 dark:text-zinc-400">
+    <main className="flex flex-col flex-1 mx-auto w-full max-w-lg px-4 pt-6 pb-4">
+      <div className="flex items-center justify-between mb-6">
         <Link
           href="/"
-          className="hover:text-zinc-900 dark:hover:text-zinc-100"
+          className="md3-state-layer rounded-md-xs px-2 py-1 text-md-label-lg text-md-primary"
         >
-          ← all kanji
+          ← levels
         </Link>
-        <div className="flex gap-4">
-          {prev !== null ? (
-            <Link
-              href={`/kanji/${prev}`}
-              className="hover:text-zinc-900 dark:hover:text-zinc-100"
-            >
-              ← prev
-            </Link>
-          ) : (
-            <span className="opacity-30">← prev</span>
-          )}
-          {next !== null ? (
-            <Link
-              href={`/kanji/${next}`}
-              className="hover:text-zinc-900 dark:hover:text-zinc-100"
-            >
-              next →
-            </Link>
-          ) : (
-            <span className="opacity-30">next →</span>
-          )}
-        </div>
+        <span className="text-md-label-sm text-md-on-surface-variant">
+          {index + 1} / {kanjiList.length}
+        </span>
       </div>
 
-      <FlashCard kanji={kanji} />
+      <KanjiView initialId={index} totalCount={kanjiList.length} />
     </main>
   );
 }

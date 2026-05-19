@@ -6,14 +6,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project goal
 
-Japanese kanji flashcard app covering 400+ kanji across JLPT levels N5–N1. Each kanji entry includes JLPT level, school grade (1–6, 8 = secondary, null = unassigned), on/kun readings, and optional compounds.
+Japanese kanji flashcard app covering 400+ kanji across JLPT levels N5–N1. Each entry has a JLPT level, school grade (1–6 elementary, 8 secondary, null unassigned), on/kun readings, and optional compounds.
 
 **Routes:**
-- `/` — level selection cards (N5–N1 + All)
-- `/level/[level]` — kanji grid filtered by JLPT level (`n5`, `n4`, `n3`, `n2`, `n1`, `all`)
-- `/kanji/[id]` — flip card for a single kanji; `id` is the zero-based index into `kanjiList`
+- `/` — JLPT level selection cards (N5–N1 + All)
+- `/level/[level]` — kanji grid for one level (`n5`, `n4`, `n3`, `n2`, `n1`, `all`); statically pre-rendered via `generateStaticParams`
+- `/kanji/[id]` — flip card for a single kanji; `id` is the zero-based index into `kanjiList` — **always append** to `kanjiList`, never insert, to keep ids stable
 
-**Data:** [app/data/kanji.ts](app/data/kanji.ts) — single `Kanji[]` export. Add new kanji here; the index in the array becomes its URL id, so always append rather than inserting.
+**Data:** [app/data/kanji.ts](app/data/kanji.ts) — single `Kanji[]` export. `KanjiGrid` receives `{ kanji, index }[]` entries so it can always link to the correct global index regardless of filtering.
+
+**Components:**
+- `FlashCard` — `'use client'`; CSS 3D flip on click; shows JLPT + grade badges on back face
+- `KanjiGrid` — server component; accepts optional `entries` prop (defaults to all kanjiList)
 
 ## Commands
 

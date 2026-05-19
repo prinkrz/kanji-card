@@ -7,12 +7,12 @@ const VALID_LEVELS = ["n5", "n4", "n3", "n2", "n1", "all"] as const;
 type Level = (typeof VALID_LEVELS)[number];
 
 const LEVEL_META: Record<Level, { label: string; description: string; badge: string }> = {
-  n5: { label: "N5", description: "Beginner", badge: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" },
-  n4: { label: "N4", description: "Elementary", badge: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" },
-  n3: { label: "N3", description: "Intermediate", badge: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200" },
-  n2: { label: "N2", description: "Upper Intermediate", badge: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200" },
-  n1: { label: "N1", description: "Advanced", badge: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" },
-  all: { label: "All", description: "All Levels", badge: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300" },
+  n5:  { label: "N5",  description: "Beginner",          badge: "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-700" },
+  n4:  { label: "N4",  description: "Elementary",         badge: "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/40 dark:text-blue-200 dark:border-blue-700" },
+  n3:  { label: "N3",  description: "Intermediate",       badge: "bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/40 dark:text-amber-200 dark:border-amber-700" },
+  n2:  { label: "N2",  description: "Upper Intermediate", badge: "bg-orange-100 text-orange-800 border-orange-300 dark:bg-orange-900/40 dark:text-orange-200 dark:border-orange-700" },
+  n1:  { label: "N1",  description: "Advanced",           badge: "bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-900/40 dark:text-rose-200 dark:border-rose-700" },
+  all: { label: "All", description: "All Levels",         badge: "bg-md-primary-container text-md-on-primary-container border-md-outline-variant" },
 };
 
 export async function generateStaticParams() {
@@ -49,18 +49,21 @@ export default async function LevelPage({ params }: { params: Promise<{ level: s
       <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <Link href="/" className="text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100">
+            <Link
+              href="/"
+              className="md3-state-layer rounded-md-xs px-2 py-1 text-md-label-lg text-md-primary"
+            >
               ← levels
             </Link>
-            <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${meta.badge}`}>
+            <span className={`inline-flex items-center rounded-md-full border px-3 py-1 text-md-label-md font-medium ${meta.badge}`}>
               {meta.label}
             </span>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+          <h1 className="text-md-headline-sm font-bold text-md-on-surface">
             {meta.description}
           </h1>
         </div>
-        <p className="text-zinc-500 dark:text-zinc-400 text-sm shrink-0">
+        <p className="text-md-body-md text-md-on-surface-variant shrink-0">
           {entries.length} kanji
         </p>
       </div>
