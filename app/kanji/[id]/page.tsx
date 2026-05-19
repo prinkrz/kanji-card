@@ -36,7 +36,7 @@ export default async function KanjiPage({
   const next = index < kanjiList.length - 1 ? index + 1 : null;
 
   return (
-    <main className="flex flex-col min-h-dvh mx-auto w-full max-w-lg px-4 pt-6 pb-4">
+    <main className="flex flex-col flex-1 mx-auto w-full max-w-lg px-4 pt-6 pb-4">
       {/* Top bar */}
       <div className="flex items-center justify-between mb-6 text-sm text-zinc-500 dark:text-zinc-400">
         <Link href="/" className="flex items-center gap-1 py-1 hover:text-zinc-900 dark:hover:text-zinc-100">
