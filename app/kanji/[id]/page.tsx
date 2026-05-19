@@ -3,6 +3,10 @@ import Link from "next/link";
 import { kanjiList } from "@/app/data/kanji";
 import KanjiView from "./KanjiView";
 
+export async function generateStaticParams() {
+  return kanjiList.map((_, index) => ({ id: String(index) }));
+}
+
 export async function generateMetadata({
   params,
 }: {
