@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import Link from "next/link";
+import Link from "@/app/components/Link";
 import FlashCard from "@/app/components/FlashCard";
 import type { Kanji } from "@/app/data/kanji";
 import kanjiLevels from "@/app/data/kanjiLevels.json";

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/Link";
 import { kanjiList, type Kanji } from "@/app/data/kanji";
 
 export type KanjiEntry = { kanji: Kanji; index: number };

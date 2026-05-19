@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import Link from "@/app/components/Link";
 import { kanjiList } from "@/app/data/kanji";
 import KanjiGrid from "@/app/components/KanjiGrid";
 
