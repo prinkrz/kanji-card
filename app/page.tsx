@@ -1,65 +1,78 @@
-import Image from "next/image";
+import Link from "next/link";
+import { kanjiList } from "@/app/data/kanji";
+
+const LEVELS = [
+  { id: "n5", label: "N5", description: "Beginner", color: "border-green-400 dark:border-green-600", badge: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" },
+  { id: "n4", label: "N4", description: "Elementary", color: "border-blue-400 dark:border-blue-600", badge: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" },
+  { id: "n3", label: "N3", description: "Intermediate", color: "border-yellow-400 dark:border-yellow-600", badge: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200" },
+  { id: "n2", label: "N2", description: "Upper Intermediate", color: "border-orange-400 dark:border-orange-600", badge: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200" },
+  { id: "n1", label: "N1", description: "Advanced", color: "border-red-400 dark:border-red-600", badge: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" },
+] as const;
 
 export default function Home() {
+  const counts = Object.fromEntries(
+    LEVELS.map(({ id }) => [
+      id,
+      kanjiList.filter((k) => k.jlpt === id.toUpperCase()).length,
+    ])
+  );
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="mx-auto w-full max-w-4xl px-6 py-12">
+      <div className="mb-10">
+        <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+          漢字カード
+        </h1>
+        <p className="mt-2 text-zinc-500 dark:text-zinc-400">
+          {kanjiList.length} kanji across all JLPT levels — choose a level to study
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {LEVELS.map(({ id, label, description, color, badge }) => (
+          <Link
+            key={id}
+            href={`/level/${id}`}
+            className={`group flex flex-col gap-3 rounded-2xl border-2 ${color} bg-white p-6 transition-shadow hover:shadow-lg dark:bg-zinc-900`}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            <div className="flex items-center justify-between">
+              <span className={`rounded-full px-3 py-1 text-sm font-bold ${badge}`}>
+                {label}
+              </span>
+              <span className="text-2xl font-bold text-zinc-300 dark:text-zinc-600 group-hover:text-zinc-400 transition-colors">
+                →
+              </span>
+            </div>
+            <div>
+              <p className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">{description}</p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
+                {counts[id] ?? 0} kanji
+              </p>
+            </div>
+          </Link>
+        ))}
+
+        {/* All kanji card */}
+        <Link
+          href="/level/all"
+          className="group flex flex-col gap-3 rounded-2xl border-2 border-zinc-300 dark:border-zinc-600 bg-white p-6 transition-shadow hover:shadow-lg dark:bg-zinc-900"
+        >
+          <div className="flex items-center justify-between">
+            <span className="rounded-full px-3 py-1 text-sm font-bold bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+              All
+            </span>
+            <span className="text-2xl font-bold text-zinc-300 dark:text-zinc-600 group-hover:text-zinc-400 transition-colors">
+              →
+            </span>
+          </div>
+          <div>
+            <p className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">All Levels</p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
+              {kanjiList.length} kanji
+            </p>
+          </div>
+        </Link>
+      </div>
+    </main>
   );
 }
