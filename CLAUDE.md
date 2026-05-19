@@ -4,6 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 @AGENTS.md
 
+## Project goal
+
+Japanese kanji flashcard app covering 400+ kanji across JLPT levels N5–N1. Each kanji entry includes JLPT level, school grade (1–6, 8 = secondary, null = unassigned), on/kun readings, and optional compounds.
+
+**Routes:**
+- `/` — level selection cards (N5–N1 + All)
+- `/level/[level]` — kanji grid filtered by JLPT level (`n5`, `n4`, `n3`, `n2`, `n1`, `all`)
+- `/kanji/[id]` — flip card for a single kanji; `id` is the zero-based index into `kanjiList`
+
+**Data:** [app/data/kanji.ts](app/data/kanji.ts) — single `Kanji[]` export. Add new kanji here; the index in the array becomes its URL id, so always append rather than inserting.
+
 ## Commands
 
 ```bash
