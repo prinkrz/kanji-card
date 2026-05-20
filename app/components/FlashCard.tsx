@@ -1,26 +1,21 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
+import { useTheme } from "@mui/material/styles";
 import type { Kanji } from "@/app/data/kanji";
 
-// Gradient used on the card front + back header
-const LEVEL_GRADIENT: Record<string, string> = {
-  N5: "from-emerald-400 to-teal-500",
-  N4: "from-blue-400 to-indigo-500",
-  N3: "from-amber-400 to-orange-400",
-  N2: "from-orange-400 to-rose-500",
-  N1: "from-rose-500 to-red-600",
-};
+type MuiColor = "success" | "info" | "warning" | "secondary" | "error" | "primary";
 
-const DEFAULT_GRADIENT = "from-violet-500 to-purple-600";
-
-// MD3 Assist Chip colours keyed by JLPT level
-const LEVEL_BADGE: Record<string, string> = {
-  N5: "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-700",
-  N4: "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/40 dark:text-blue-200 dark:border-blue-700",
-  N3: "bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/40 dark:text-amber-200 dark:border-amber-700",
-  N2: "bg-orange-100 text-orange-800 border-orange-300 dark:bg-orange-900/40 dark:text-orange-200 dark:border-orange-700",
-  N1: "bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-900/40 dark:text-rose-200 dark:border-rose-700",
+const LEVEL_COLOR: Record<string, MuiColor> = {
+  N5: "success",
+  N4: "info",
+  N3: "warning",
+  N2: "secondary",
+  N1: "error",
 };
 
 function gradeLabel(grade: number | null): string | null {
@@ -44,8 +39,10 @@ export default function FlashCard({ kanji, prevId, nextId, onNavigatePrev, onNav
   const [flipped, setFlipped] = useState(false);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
+  const theme = useTheme();
 
-  const gradient = kanji.jlpt ? (LEVEL_GRADIENT[kanji.jlpt] ?? DEFAULT_GRADIENT) : DEFAULT_GRADIENT;
+  const colorKey: MuiColor = kanji.jlpt ? (LEVEL_COLOR[kanji.jlpt] ?? "primary") : "primary";
+  const palette = theme.palette[colorKey];
 
   function handleTouchStart(e: React.TouchEvent) {
     touchStartX.current = e.touches[0].clientX;
@@ -72,113 +69,195 @@ export default function FlashCard({ kanji, prevId, nextId, onNavigatePrev, onNav
 
   return (
     <div
-      className="cursor-pointer w-full select-none touch-pan-y"
-      style={{ perspective: "1200px", minHeight: "460px" }}
+      style={{ perspective: "1200px", minHeight: "460px", cursor: "pointer", userSelect: "none" }}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onClick={() => setFlipped((f) => !f)}
     >
       <div
-        className="relative w-full transition-transform duration-500"
         style={{
+          position: "relative",
+          width: "100%",
+          minHeight: "460px",
           transformStyle: "preserve-3d",
           transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-          minHeight: "460px",
+          transition: "transform 500ms",
         }}
       >
         {/* ── FRONT ── */}
-        <div
-          className={`absolute inset-0 flex flex-col items-center justify-center rounded-md-xl bg-gradient-to-br ${gradient} shadow-md-elev-3`}
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: "28px",
+            bgcolor: `${colorKey}.main`,
+            color: `${colorKey}.contrastText`,
+            boxShadow: 6,
+            overflow: "hidden",
+          }}
           style={{ backfaceVisibility: "hidden" }}
         >
-          {/* faint decorative ring */}
-          <div className="absolute inset-0 rounded-md-xl ring-1 ring-white/20" />
+          {/* faint ring */}
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: "28px",
+              border: "1px solid rgba(255,255,255,0.2)",
+              pointerEvents: "none",
+            }}
+          />
 
-          <span className="text-[8rem] sm:text-[10rem] leading-none font-serif text-white drop-shadow-lg">
+          <Typography
+            component="span"
+            sx={{
+              fontSize: { xs: "8rem", sm: "10rem" },
+              lineHeight: 1,
+              fontFamily: "serif",
+              textShadow: "0 4px 12px rgba(0,0,0,0.2)",
+            }}
+          >
             {kanji.character}
-          </span>
+          </Typography>
 
-          <div className="mt-6 flex flex-col items-center gap-1">
-            <p className="text-white/70 text-md-body-sm">tap to reveal</p>
+          <Box sx={{ mt: 3, display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5 }}>
+            <Typography variant="caption" sx={{ opacity: 0.7 }}>
+              tap to reveal
+            </Typography>
             {(prevId !== null || nextId !== null) && (
-              <p className="text-white/40 text-md-label-sm">swipe ← → to navigate</p>
+              <Typography variant="caption" sx={{ opacity: 0.4 }}>
+                swipe ← → to navigate
+              </Typography>
             )}
-          </div>
-        </div>
+          </Box>
+        </Box>
 
         {/* ── BACK ── */}
-        <div
-          className="absolute inset-0 flex flex-col rounded-md-xl shadow-md-elev-3 overflow-hidden"
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: "28px",
+            boxShadow: 6,
+            overflow: "hidden",
+          }}
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
           }}
         >
           {/* Coloured header strip */}
-          <div className={`bg-gradient-to-br ${gradient} px-6 py-5 shrink-0`}>
-            <div className="flex items-baseline gap-3">
-              <span className="text-4xl sm:text-5xl font-serif text-white drop-shadow">
+          <Box
+            sx={{
+              bgcolor: `${colorKey}.main`,
+              color: `${colorKey}.contrastText`,
+              px: 3,
+              py: 2.5,
+              flexShrink: 0,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "baseline", gap: 1.5 }}>
+              <Typography
+                component="span"
+                sx={{ fontSize: { xs: "2.25rem", sm: "3rem" }, fontFamily: "serif", lineHeight: 1 }}
+              >
                 {kanji.character}
-              </span>
-              <p className="text-white/80 text-md-body-md leading-snug">{kanji.meaning}</p>
-            </div>
-          </div>
+              </Typography>
+              <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                {kanji.meaning}
+              </Typography>
+            </Box>
+          </Box>
 
-          {/* MD3 surface-container-low content area */}
-          <div className="flex-1 overflow-y-auto bg-md-surface-container-low px-6 py-5 flex flex-col gap-4">
+          {/* Content area */}
+          <Box
+            sx={{
+              flex: 1,
+              overflowY: "auto",
+              bgcolor: "background.paper",
+              color: "text.primary",
+              px: 3,
+              py: 2.5,
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+            }}
+          >
             {/* Readings */}
-            <div className="space-y-1.5">
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 0.75 }}>
               {kanji.on.length > 0 && (
-                <p className="text-md-body-md">
-                  <span className="font-semibold text-md-on-surface-variant mr-2">音</span>
-                  <span className="font-mono text-md-on-surface">
-                    {kanji.on.join("、 ")}
-                  </span>
-                </p>
+                <Typography variant="body2">
+                  <Box component="span" sx={{ fontWeight: 600, color: "text.secondary", mr: 1 }}>音</Box>
+                  <Box component="span" sx={{ fontFamily: "monospace" }}>{kanji.on.join("、 ")}</Box>
+                </Typography>
               )}
               {kanji.kun.length > 0 && (
-                <p className="text-md-body-md">
-                  <span className="font-semibold text-md-on-surface-variant mr-2">訓</span>
-                  <span className="font-mono text-md-on-surface">
-                    {kanji.kun.join("、 ")}
-                  </span>
-                </p>
+                <Typography variant="body2">
+                  <Box component="span" sx={{ fontWeight: 600, color: "text.secondary", mr: 1 }}>訓</Box>
+                  <Box component="span" sx={{ fontFamily: "monospace" }}>{kanji.kun.join("、 ")}</Box>
+                </Typography>
               )}
-            </div>
+            </Box>
 
-            {/* MD3 Assist Chips */}
-            <div className="flex gap-2 flex-wrap">
+            {/* Badges */}
+            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
               {kanji.jlpt && (
-                <span className={`inline-flex items-center rounded-md-full border px-3 py-0.5 text-md-label-md font-medium ${LEVEL_BADGE[kanji.jlpt] ?? ""}`}>
-                  JLPT {kanji.jlpt}
-                </span>
+                <Chip
+                  label={`JLPT ${kanji.jlpt}`}
+                  color={colorKey}
+                  size="small"
+                  sx={{ fontFamily: theme.typography.fontFamily }}
+                />
               )}
-              {kanji.grade !== null && (
-                <span className="inline-flex items-center rounded-md-full border border-md-outline-variant px-3 py-0.5 text-md-label-md font-medium bg-md-surface-variant text-md-on-surface-variant">
-                  {gradeLabel(kanji.grade)}
-                </span>
+              {kanji.grade !== null && gradeLabel(kanji.grade) && (
+                <Chip
+                  label={gradeLabel(kanji.grade)!}
+                  variant="outlined"
+                  size="small"
+                />
               )}
-            </div>
+            </Box>
 
             {/* Compounds */}
             {kanji.compounds.length > 0 && (
               <>
-                <hr className="border-md-outline-variant" />
-                <ul className="space-y-2.5">
+                <Divider />
+                <Box component="ul" sx={{ p: 0, m: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 1.25 }}>
                   {kanji.compounds.map((c) => (
-                    <li key={c.word} className="flex items-baseline gap-2 text-md-body-md">
-                      <span className="font-serif text-base shrink-0 text-md-on-surface">
+                    <Box
+                      key={c.word}
+                      component="li"
+                      sx={{ display: "flex", alignItems: "baseline", gap: 1 }}
+                    >
+                      <Typography
+                        component="span"
+                        sx={{ fontFamily: "serif", fontSize: "1rem", flexShrink: 0, color: "text.primary" }}
+                      >
                         {c.word}
-                      </span>
-                      <span className="font-mono shrink-0 text-md-on-surface-variant">{c.reading}</span>
-                      <span className="text-md-on-surface">{c.meaning}</span>
-                    </li>
+                      </Typography>
+                      <Typography
+                        component="span"
+                        variant="caption"
+                        sx={{ fontFamily: "monospace", flexShrink: 0, color: "text.secondary" }}
+                      >
+                        {c.reading}
+                      </Typography>
+                      <Typography component="span" variant="body2" color="text.primary">
+                        {c.meaning}
+                      </Typography>
+                    </Box>
                   ))}
-                </ul>
+                </Box>
               </>
             )}
-          </div>
-        </div>
+          </Box>
+        </Box>
       </div>
     </div>
   );

@@ -1,3 +1,8 @@
+"use client";
+
+import ButtonBase from "@mui/material/ButtonBase";
+import Box from "@mui/material/Box";
+import { alpha, useTheme } from "@mui/material/styles";
 import Link from "@/app/components/Link";
 import { kanjiList, type Kanji } from "@/app/data/kanji";
 
@@ -7,35 +12,66 @@ interface Props {
   entries?: KanjiEntry[];
 }
 
-const LEVEL_CLASSES: Record<string, string> = {
-  N5: "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-100",
-  N4: "border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-100",
-  N3: "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100",
-  N2: "border-orange-200 bg-orange-50 text-orange-900 dark:border-orange-800 dark:bg-orange-950/40 dark:text-orange-100",
-  N1: "border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-100",
+type MuiColor = "success" | "info" | "warning" | "secondary" | "error" | "primary";
+
+const LEVEL_COLOR: Record<string, MuiColor> = {
+  N5: "success",
+  N4: "info",
+  N3: "warning",
+  N2: "secondary",
+  N1: "error",
 };
 
-const DEFAULT_CLASSES =
-  "border-md-outline-variant bg-md-surface-container text-md-on-surface";
+function KanjiTile({ kanji, index }: KanjiEntry) {
+  const theme = useTheme();
+  const color: MuiColor = kanji.jlpt ? (LEVEL_COLOR[kanji.jlpt] ?? "primary") : "primary";
+  const palette = theme.palette[color];
+
+  return (
+    <ButtonBase
+      component={Link}
+      href={`/kanji/${index}`}
+      title={kanji.meaning}
+      sx={{
+        aspectRatio: "1 / 1",
+        borderRadius: 2,
+        border: "1px solid",
+        borderColor: alpha(palette.main, 0.4),
+        bgcolor: alpha(palette.main, 0.08),
+        color: palette.dark ?? palette.main,
+        fontSize: "1.5rem",
+        fontFamily: "serif",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        transition: "transform 150ms, box-shadow 150ms",
+        "&:hover": { transform: "scale(1.1)", boxShadow: 2, bgcolor: alpha(palette.main, 0.15) },
+        "&:active": { transform: "scale(0.95)" },
+      }}
+    >
+      {kanji.character}
+    </ButtonBase>
+  );
+}
 
 export default function KanjiGrid({ entries }: Props) {
   const items = entries ?? kanjiList.map((kanji, index) => ({ kanji, index }));
 
   return (
-    <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
-      {items.map(({ kanji, index }) => {
-        const colorClasses = kanji.jlpt ? (LEVEL_CLASSES[kanji.jlpt] ?? DEFAULT_CLASSES) : DEFAULT_CLASSES;
-        return (
-          <Link
-            key={index}
-            href={`/kanji/${index}`}
-            title={kanji.meaning}
-            className={`md3-state-layer aspect-square flex items-center justify-center rounded-md-md border text-2xl font-serif transition-all duration-150 hover:scale-110 hover:shadow-md-elev-1 active:scale-95 ${colorClasses}`}
-          >
-            {kanji.character}
-          </Link>
-        );
-      })}
-    </div>
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: {
+          xs: "repeat(5, 1fr)",
+          sm: "repeat(8, 1fr)",
+          md: "repeat(10, 1fr)",
+        },
+        gap: 1,
+      }}
+    >
+      {items.map(({ kanji, index }) => (
+        <KanjiTile key={index} kanji={kanji} index={index} />
+      ))}
+    </Box>
   );
 }
