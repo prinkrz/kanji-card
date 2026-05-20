@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
-import { useTheme } from "@mui/material/styles";
+import { useTheme, alpha } from "@mui/material/styles";
 import type { Kanji } from "@/app/data/kanji";
 
 type MuiColor = "success" | "info" | "warning" | "secondary" | "error" | "primary";
@@ -69,7 +69,7 @@ export default function FlashCard({ kanji, prevId, nextId, onNavigatePrev, onNav
 
   return (
     <div
-      style={{ perspective: "1200px", minHeight: "460px", cursor: "pointer", userSelect: "none" }}
+      style={{ perspective: "1200px", height: "100%", minHeight: "280px", cursor: "pointer", userSelect: "none" }}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onClick={() => setFlipped((f) => !f)}
@@ -78,7 +78,8 @@ export default function FlashCard({ kanji, prevId, nextId, onNavigatePrev, onNav
         style={{
           position: "relative",
           width: "100%",
-          minHeight: "460px",
+          height: "100%",
+          minHeight: "280px",
           transformStyle: "preserve-3d",
           transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
           transition: "transform 500ms",
@@ -94,9 +95,10 @@ export default function FlashCard({ kanji, prevId, nextId, onNavigatePrev, onNav
             alignItems: "center",
             justifyContent: "center",
             borderRadius: "28px",
-            bgcolor: `${colorKey}.main`,
-            color: `${colorKey}.contrastText`,
-            boxShadow: 6,
+            bgcolor: alpha(palette.main, 0.08),
+            border: "1px solid",
+            borderColor: alpha(palette.main, 0.2),
+            boxShadow: `0 2px 16px ${alpha(palette.main, 0.12)}`,
             overflow: "hidden",
           }}
           style={{ backfaceVisibility: "hidden" }}
@@ -107,7 +109,7 @@ export default function FlashCard({ kanji, prevId, nextId, onNavigatePrev, onNav
               position: "absolute",
               inset: 0,
               borderRadius: "28px",
-              border: "1px solid rgba(255,255,255,0.2)",
+              border: `1px solid ${alpha(palette.main, 0.15)}`,
               pointerEvents: "none",
             }}
           />
@@ -118,18 +120,18 @@ export default function FlashCard({ kanji, prevId, nextId, onNavigatePrev, onNav
               fontSize: { xs: "8rem", sm: "10rem" },
               lineHeight: 1,
               fontFamily: "serif",
-              textShadow: "0 4px 12px rgba(0,0,0,0.2)",
+              color: palette.dark ?? palette.main,
             }}
           >
             {kanji.character}
           </Typography>
 
           <Box sx={{ mt: 3, display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5 }}>
-            <Typography variant="caption" sx={{ opacity: 0.7 }}>
+            <Typography variant="caption" color="text.secondary">
               tap to reveal
             </Typography>
             {(prevId !== null || nextId !== null) && (
-              <Typography variant="caption" sx={{ opacity: 0.4 }}>
+              <Typography variant="caption" color="text.disabled">
                 swipe ← → to navigate
               </Typography>
             )}
@@ -155,8 +157,9 @@ export default function FlashCard({ kanji, prevId, nextId, onNavigatePrev, onNav
           {/* Coloured header strip */}
           <Box
             sx={{
-              bgcolor: `${colorKey}.main`,
-              color: `${colorKey}.contrastText`,
+              bgcolor: alpha(palette.main, 0.1),
+              borderBottom: "1px solid",
+              borderColor: alpha(palette.main, 0.15),
               px: 3,
               py: 2.5,
               flexShrink: 0,
@@ -165,11 +168,11 @@ export default function FlashCard({ kanji, prevId, nextId, onNavigatePrev, onNav
             <Box sx={{ display: "flex", alignItems: "baseline", gap: 1.5 }}>
               <Typography
                 component="span"
-                sx={{ fontSize: { xs: "2.25rem", sm: "3rem" }, fontFamily: "serif", lineHeight: 1 }}
+                sx={{ fontSize: { xs: "2.25rem", sm: "3rem" }, fontFamily: "serif", lineHeight: 1, color: palette.dark ?? palette.main }}
               >
                 {kanji.character}
               </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.85 }}>
+              <Typography variant="body2" color="text.secondary">
                 {kanji.meaning}
               </Typography>
             </Box>

@@ -1,12 +1,5 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  compiler: { styledComponents: true },
-  turbopack: {
-    resolveAlias: {
-      "@mui/styled-engine": "@mui/styled-engine-sc",
-    },
-  },
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;

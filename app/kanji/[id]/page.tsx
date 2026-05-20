@@ -1,14 +1,10 @@
 import { notFound } from "next/navigation";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { kanjiList } from "@/app/data/kanji";
 import KanjiView from "./KanjiView";
 
 export async function generateStaticParams() {
-  return kanjiList.map((_, index) => ({ id: String(index) }));
+  return kanjiList.map((_, index) => ({ id: String(index + 1) }));
 }
 
 export async function generateMetadata({
@@ -17,7 +13,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const kanji = kanjiList[Number(id)];
+  const kanji = kanjiList[Number(id) - 1];
   if (!kanji) return {};
   return {
     title: `${kanji.character} — ${kanji.meaning}`,
@@ -31,7 +27,7 @@ export default async function KanjiPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const index = Number(id);
+  const index = Number(id) - 1;
   const kanji = kanjiList[index];
 
   if (!kanji) notFound();
@@ -39,30 +35,8 @@ export default async function KanjiPage({
   return (
     <Container
       maxWidth="sm"
-      sx={{ display: "flex", flexDirection: "column", flex: 1, pt: 3, pb: 2 }}
+      sx={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, py: 1.5 }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          mb: 3,
-        }}
-      >
-        <Button
-          href="/"
-          variant="text"
-          color="primary"
-          startIcon={<ArrowBackIcon />}
-          size="small"
-        >
-          levels
-        </Button>
-        <Typography variant="caption" color="text.secondary">
-          {index + 1} / {kanjiList.length}
-        </Typography>
-      </Box>
-
       <KanjiView initialId={index} totalCount={kanjiList.length} />
     </Container>
   );

@@ -30,7 +30,7 @@ function KanjiTile({ kanji, index }: KanjiEntry) {
   return (
     <ButtonBase
       component={Link}
-      href={`/kanji/${index}`}
+      href={`/kanji/${index + 1}`}
       title={kanji.meaning}
       sx={{
         aspectRatio: "1 / 1",
