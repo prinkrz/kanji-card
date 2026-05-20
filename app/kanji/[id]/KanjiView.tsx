@@ -2,12 +2,13 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import Link from "@/app/components/Link";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import FlashCard from "@/app/components/FlashCard";
 import type { Kanji } from "@/app/data/kanji";
 import kanjiLevels from "@/app/data/kanjiLevels.json";
@@ -77,14 +78,14 @@ export default function KanjiView({ initialId, totalCount }: Props) {
       setExitCard({ kanji: kanjiRef.current, direction });
     }
     setCurrentIndex(newIndex);
-    window.history.pushState(null, "", `/kanji/${newIndex}`);
+    window.history.pushState(null, "", `/kanji/${newIndex + 1}`);
   }, [totalCount]);
 
   useEffect(() => {
     function onPopState() {
       const match = window.location.pathname.match(/\/kanji\/(\d+)/);
       if (match) {
-        const idx = Number(match[1]);
+        const idx = Number(match[1]) - 1;
         navigate(idx, idx > currentIndex ? "right" : "left");
       }
     }
@@ -104,24 +105,31 @@ export default function KanjiView({ initialId, totalCount }: Props) {
     return (
       <Box sx={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2 }}>
         <Typography color="text.secondary">Failed to load kanji data.</Typography>
-        <Button component={Link} href="/" variant="text" color="primary">
-          ← back to levels
-        </Button>
+        <IconButton href="/" color="primary" aria-label="back to levels"><ArrowBackIcon /></IconButton>
       </Box>
     );
   }
 
   return (
-    <>
-      <Box sx={{ flex: 1, position: "relative", overflow: "hidden", minHeight: "460px" }}>
-        {/* Ghost card — exit animation */}
+    <Box sx={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, gap: 1 }}>
+
+      {/* ── Compact header ── */}
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", px: 0.5 }}>
+        <Tooltip title="Back to levels">
+          <IconButton href="/" size="small" color="primary" aria-label="back to levels">
+            <ArrowBackIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <Typography variant="caption" color="text.secondary" sx={{ letterSpacing: 0.5 }}>
+          {currentIndex + 1} <Box component="span" sx={{ opacity: 0.5 }}>/</Box> {totalCount}
+        </Typography>
+      </Box>
+
+      {/* ── Card area — fills most of the space ── */}
+      <Box sx={{ flex: 1, minHeight: 0, position: "relative", overflow: "hidden" }}>
         {exitCard && (
           <div
-            className={`${
-              exitCard.direction === "right"
-                ? "animate-card-exit-left"
-                : "animate-card-exit-right"
-            }`}
+            className={exitCard.direction === "right" ? "animate-card-exit-left" : "animate-card-exit-right"}
             style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
             onAnimationEnd={() => setExitCard(null)}
           >
@@ -129,9 +137,8 @@ export default function KanjiView({ initialId, totalCount }: Props) {
           </div>
         )}
 
-        {/* Incoming card */}
         {kanji ? (
-          <div key={cardKey} className={enterClass}>
+          <div key={cardKey} className={enterClass} style={{ height: "100%" }}>
             <FlashCard
               kanji={kanji}
               prevId={prevId}
@@ -142,39 +149,38 @@ export default function KanjiView({ initialId, totalCount }: Props) {
           </div>
         ) : (
           !exitCard && (
-            <Skeleton variant="rounded" height={460} sx={{ borderRadius: "28px" }} />
+            <Skeleton variant="rounded" height="100%" sx={{ borderRadius: "28px", minHeight: 280 }} />
           )
         )}
       </Box>
 
-      {/* Navigation buttons */}
-      <Box sx={{ mt: 3, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
-        {prevId !== null ? (
-          <Button
-            variant="outlined"
-            onClick={() => navigate(prevId, "left")}
-            startIcon={<ArrowBackIcon />}
-            sx={{ py: 1.5 }}
-          >
-            Prev
-          </Button>
-        ) : (
-          <Box sx={{ border: "1px solid", borderColor: "divider", opacity: 0.3, borderRadius: 1, py: 1.5 }} />
-        )}
+      {/* ── Navigation ── */}
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", px: 1, py: 0.5 }}>
+        <IconButton
+          onClick={() => prevId !== null && navigate(prevId, "left")}
+          disabled={prevId === null}
+          color="primary"
+          aria-label="previous kanji"
+          sx={{ border: "1px solid", borderColor: "divider" }}
+        >
+          <ArrowBackIosNewIcon fontSize="small" />
+        </IconButton>
 
-        {nextId !== null ? (
-          <Button
-            variant="outlined"
-            onClick={() => navigate(nextId, "right")}
-            endIcon={<ArrowForwardIcon />}
-            sx={{ py: 1.5 }}
-          >
-            Next
-          </Button>
-        ) : (
-          <Box sx={{ border: "1px solid", borderColor: "divider", opacity: 0.3, borderRadius: 1, py: 1.5 }} />
-        )}
+        <Typography variant="caption" color="text.disabled" sx={{ fontSize: "0.7rem" }}>
+          swipe or tap to flip
+        </Typography>
+
+        <IconButton
+          onClick={() => nextId !== null && navigate(nextId, "right")}
+          disabled={nextId === null}
+          color="primary"
+          aria-label="next kanji"
+          sx={{ border: "1px solid", borderColor: "divider" }}
+        >
+          <ArrowForwardIosIcon fontSize="small" />
+        </IconButton>
       </Box>
-    </>
+
+    </Box>
   );
 }

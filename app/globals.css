@@ -22,10 +22,15 @@
 .animate-card-enter-from-left  { animation: card-enter-from-left  320ms ease-out both; }
 
 /* ─── Base ───────────────────────────────────────────────────── */
-html {
+html,
+body {
+  height: 100%;
   overflow-x: hidden;
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
   -webkit-tap-highlight-color: transparent;
 }

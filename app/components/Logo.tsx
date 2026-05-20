@@ -12,29 +12,21 @@ export default function Logo({ size = 32 }: Props) {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      <defs>
-        <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#8b5cf6" />
-          <stop offset="1" stopColor="#6d28d9" />
-        </linearGradient>
-      </defs>
+      {/* Back card — left reflection, light blue tint */}
+      <rect x="1" y="5" width="18" height="23" rx="4" fill="white" opacity="0.55" />
 
-      {/* Back card — offset up-right, muted */}
-      <rect x="9" y="2" width="20" height="26" rx="4" fill="#c4b5fd" opacity="0.45" />
+      {/* Front card — fully white */}
+      <rect x="9" y="2" width="19" height="25" rx="4" fill="white" />
 
-      {/* Front card */}
-      <rect x="3" y="6" width="20" height="26" rx="4" fill="url(#logoGrad)" />
-
-      {/* Kanji 字 ("character") */}
+      {/* Kanji 字 */}
       <text
-        x="13"
-        y="25"
+        x="18.5"
+        y="21"
         fontFamily="serif"
-        fontSize="15"
+        fontSize="14"
         fontWeight="bold"
-        fill="white"
+        fill="#3F51B5"
         textAnchor="middle"
-        opacity="0.95"
       >
         字
       </text>

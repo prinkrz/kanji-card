@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Box from "@mui/material/Box";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
-import StyledComponentsRegistry from "@/app/lib/registry";
 import Providers from "@/app/providers";
+import EmotionRegistry from "@/app/lib/registry";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,23 +32,22 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body>
-        <StyledComponentsRegistry>
+        <EmotionRegistry>
           <Providers>
             <Navbar />
-            <Box
-              sx={{
+            <main
+              style={{
                 flex: 1,
                 display: "flex",
                 flexDirection: "column",
-                pt: "64px",
-                minHeight: "100vh",
+                paddingTop: "64px",
               }}
             >
               {children}
-            </Box>
+            </main>
             <Footer />
           </Providers>
-        </StyledComponentsRegistry>
+        </EmotionRegistry>
       </body>
     </html>
   );

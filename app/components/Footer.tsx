@@ -17,22 +17,15 @@ export default function Footer() {
           mx: "auto",
           maxWidth: "lg",
           px: { xs: 2, sm: 3 },
-          py: 3,
+          py: 1.5,
           display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
           alignItems: "center",
-          justifyContent: "space-between",
-          gap: 1.5,
+          justifyContent: "center",
         }}
       >
-        <Typography variant="body2" color="text.secondary">
-          <Box component="span" sx={{ color: "text.primary", fontWeight: 500 }}>
-            漢字カード
-          </Box>
-          {" "}— Japanese kanji flashcards
-        </Typography>
         <Typography variant="caption" color="text.disabled">
-          Readings and compounds based on JLPT N5–N1 curriculum
+          <Box component="span" sx={{ color: "text.secondary", fontWeight: 500 }}>漢字カード</Box>
+          {" — "}Japanese kanji flashcards · JLPT N5–N1
         </Typography>
       </Box>
     </Box>
