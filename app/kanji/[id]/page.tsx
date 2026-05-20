@@ -1,5 +1,9 @@
 import { notFound } from "next/navigation";
-import Link from "@/app/components/Link";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { kanjiList } from "@/app/data/kanji";
 import KanjiView from "./KanjiView";
 
@@ -33,20 +37,33 @@ export default async function KanjiPage({
   if (!kanji) notFound();
 
   return (
-    <main className="flex flex-col flex-1 mx-auto w-full max-w-lg px-4 pt-6 pb-4">
-      <div className="flex items-center justify-between mb-6">
-        <Link
+    <Container
+      maxWidth="sm"
+      sx={{ display: "flex", flexDirection: "column", flex: 1, pt: 3, pb: 2 }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 3,
+        }}
+      >
+        <Button
           href="/"
-          className="md3-state-layer rounded-md-xs px-2 py-1 text-md-label-lg text-md-primary"
+          variant="text"
+          color="primary"
+          startIcon={<ArrowBackIcon />}
+          size="small"
         >
-          ← levels
-        </Link>
-        <span className="text-md-label-sm text-md-on-surface-variant">
+          levels
+        </Button>
+        <Typography variant="caption" color="text.secondary">
           {index + 1} / {kanjiList.length}
-        </span>
-      </div>
+        </Typography>
+      </Box>
 
       <KanjiView initialId={index} totalCount={kanjiList.length} />
-    </main>
+    </Container>
   );
 }

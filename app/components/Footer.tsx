@@ -1,15 +1,40 @@
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
 export default function Footer() {
   return (
-    <footer className="mt-auto border-t border-md-outline-variant bg-md-surface-container-low">
-      <div className="mx-auto max-w-5xl px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p className="text-md-body-md text-md-on-surface-variant">
-          <span className="text-md-title-sm text-md-on-surface">漢字カード</span>
+    <Box
+      component="footer"
+      sx={{
+        mt: "auto",
+        borderTop: "1px solid",
+        borderColor: "divider",
+        bgcolor: "background.paper",
+      }}
+    >
+      <Box
+        sx={{
+          mx: "auto",
+          maxWidth: "lg",
+          px: { xs: 2, sm: 3 },
+          py: 3,
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 1.5,
+        }}
+      >
+        <Typography variant="body2" color="text.secondary">
+          <Box component="span" sx={{ color: "text.primary", fontWeight: 500 }}>
+            漢字カード
+          </Box>
           {" "}— Japanese kanji flashcards
-        </p>
-        <p className="text-md-body-sm text-md-on-surface-variant/60">
+        </Typography>
+        <Typography variant="caption" color="text.disabled">
           Readings and compounds based on JLPT N5–N1 curriculum
-        </p>
-      </div>
-    </footer>
+        </Typography>
+      </Box>
+    </Box>
   );
 }

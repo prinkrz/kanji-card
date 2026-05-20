@@ -1,3 +1,12 @@
+"use client";
+
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import ButtonBase from "@mui/material/ButtonBase";
+import Typography from "@mui/material/Typography";
 import Link from "@/app/components/Link";
 import Logo from "./Logo";
 
@@ -11,51 +20,75 @@ const LEVELS = [
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-50 border-b border-md-outline-variant bg-md-surface-container/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 h-16">
+    <AppBar
+      position="fixed"
+      elevation={0}
+      sx={{
+        bgcolor: "background.paper",
+        borderBottom: "1px solid",
+        borderColor: "divider",
+        backdropFilter: "blur(8px)",
+        color: "text.primary",
+      }}
+    >
+      <Toolbar
+        sx={{
+          maxWidth: "lg",
+          mx: "auto",
+          width: "100%",
+          px: { xs: 2, sm: 3 },
+          minHeight: "64px !important",
+        }}
+      >
         {/* Logo */}
-        <Link
+        <ButtonBase
+          component={Link}
           href="/"
-          className="md3-state-layer rounded-md-sm flex items-center gap-2.5 px-2 py-1 transition-opacity"
+          sx={{
+            borderRadius: 2,
+            px: 1,
+            py: 0.5,
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+          }}
         >
           <Logo size={30} />
-          <span className="text-md-title-lg text-md-on-surface">
-            漢字<span className="text-md-on-surface-variant font-normal ml-0.5 text-base">カード</span>
-          </span>
-        </Link>
+          <Typography variant="h6" sx={{ fontWeight: 600, lineHeight: 1 }}>
+            漢字
+            <Box component="span" sx={{ color: "text.secondary", fontWeight: 400, fontSize: "0.875rem", ml: 0.25 }}>
+              カード
+            </Box>
+          </Typography>
+        </ButtonBase>
 
-        {/* Level links — desktop */}
-        <nav className="hidden sm:flex items-center gap-1">
+        <Box sx={{ flexGrow: 1 }} />
+
+        {/* Level links */}
+        <Stack direction="row" spacing={0.5}>
           {LEVELS.map(({ id, label }) => (
-            <Link
+            <Button
               key={id}
+              component={Link}
               href={`/level/${id}`}
-              className="md3-state-layer rounded-md-sm px-3 py-1.5 text-md-label-lg text-md-on-surface-variant transition-colors"
+              color="inherit"
+              size="small"
+              sx={{ color: "text.secondary", minWidth: 0, px: { xs: 1, sm: 1.5 } }}
             >
               {label}
-            </Link>
+            </Button>
           ))}
-          <Link
+          <Button
+            component={Link}
             href="/level/all"
-            className="md3-state-layer ml-1 rounded-md-sm px-3 py-1.5 text-md-label-lg text-md-on-surface-variant transition-colors"
+            color="inherit"
+            size="small"
+            sx={{ color: "text.secondary", minWidth: 0, px: { xs: 1, sm: 1.5 } }}
           >
             All
-          </Link>
-        </nav>
-
-        {/* Level chips — mobile */}
-        <nav className="flex sm:hidden items-center gap-1">
-          {LEVELS.map(({ id, label }) => (
-            <Link
-              key={id}
-              href={`/level/${id}`}
-              className="md3-state-layer rounded-md-xs px-2 py-1 text-md-label-sm text-md-on-surface-variant"
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
-      </div>
-    </header>
+          </Button>
+        </Stack>
+      </Toolbar>
+    </AppBar>
   );
 }
