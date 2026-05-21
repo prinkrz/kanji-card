@@ -119,14 +119,12 @@ export default function LevelView({ kanji }: Props) {
           <Box
             sx={{
               position: "fixed",
-              top: "64px",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 1300,
+              inset: 0,
+              zIndex: 1050,
               bgcolor: "background.default",
               display: "flex",
               flexDirection: "column",
+              pt: "64px",
             }}
           >
             {/* Overlay header */}
