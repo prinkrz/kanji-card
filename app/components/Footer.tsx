@@ -1,5 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import GitHubIcon from "@mui/icons-material/GitHub";
 
 export default function Footer() {
   return (
@@ -17,16 +19,27 @@ export default function Footer() {
           mx: "auto",
           maxWidth: "lg",
           px: { xs: 2, sm: 3 },
-          py: 1.5,
+          py: 1,
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "space-between",
         }}
       >
         <Typography variant="caption" color="text.disabled">
-          <Box component="span" sx={{ color: "text.secondary", fontWeight: 500 }}>漢字カード</Box>
-          {" — "}Japanese kanji flashcards · JLPT N5–N1
+          Built with <Box component="span" sx={{ color: "error.main" }}>♥</Box> for Japanese learners
         </Typography>
+
+        <IconButton
+          component="a"
+          href="https://github.com/prinkrz/kanji-card"
+          target="_blank"
+          rel="noopener noreferrer"
+          size="small"
+          aria-label="GitHub source code"
+          sx={{ color: "text.disabled", "&:hover": { color: "text.secondary" } }}
+        >
+          <GitHubIcon fontSize="small" />
+        </IconButton>
       </Box>
     </Box>
   );
