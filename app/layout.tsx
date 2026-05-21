@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/app/components/Navbar";
@@ -32,6 +33,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body>
+        <Script
+          data-goatcounter="https://prinkrz.goatcounter.com/count"
+          src="//gc.zgo.at/count.js"
+          strategy="afterInteractive"
+        />
         <EmotionRegistry>
           <Providers>
             <Navbar />
