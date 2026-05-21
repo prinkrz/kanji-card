@@ -54,14 +54,6 @@ export default function Home() {
             count={counts[id] ?? 0}
           />
         ))}
-        <LevelCard
-          href="/level/all"
-          label="All"
-          description="All Levels"
-          color="primary"
-          decor="全"
-          count={kanjiList.length}
-        />
       </Box>
     </Container>
   );
