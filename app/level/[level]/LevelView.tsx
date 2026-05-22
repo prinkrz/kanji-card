@@ -35,8 +35,7 @@ export default function LevelView({ kanji }: Props) {
   const currentKanjiRef = useRef<Kanji | null>(null);
   const navDirection = useRef<NavDirection | null>(null);
 
-  const colorKey: MuiColor = (kanji[0]?.jlpt ? (LEVEL_COLOR[kanji[0].jlpt!] ?? "primary") : "primary") as MuiColor;
-  const palette = theme.palette[colorKey];
+  const colorFor = (k: Kanji): MuiColor => (k.jlpt ? (LEVEL_COLOR[k.jlpt] ?? "primary") : "primary") as MuiColor;
 
   const openCard = (index: number) => {
     navDirection.current = null;
@@ -75,34 +74,37 @@ export default function LevelView({ kanji }: Props) {
           gap: 1,
         }}
       >
-        {kanji.map((k, i) => (
-          <ButtonBase
-            key={k.character}
-            onClick={() => openCard(i)}
-            sx={{
-              aspectRatio: "1/1",
-              borderRadius: 2,
-              border: "1px solid",
-              borderColor: alpha(palette.main, 0.25),
-              bgcolor: alpha(palette.main, 0.06),
-              color: palette.dark ?? palette.main,
-              fontSize: "1.5rem",
-              fontFamily: "serif",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "transform 150ms, box-shadow 150ms, background-color 150ms",
-              "&:hover": {
-                transform: "scale(1.1)",
-                boxShadow: `0 2px 12px ${alpha(palette.main, 0.25)}`,
-                bgcolor: alpha(palette.main, 0.14),
-              },
-              "&:active": { transform: "scale(0.95)" },
-            }}
-          >
-            {k.character}
-          </ButtonBase>
-        ))}
+        {kanji.map((k, i) => {
+          const p = theme.palette[colorFor(k)];
+          return (
+            <ButtonBase
+              key={k.character}
+              onClick={() => openCard(i)}
+              sx={{
+                aspectRatio: "1/1",
+                borderRadius: 2,
+                border: "1px solid",
+                borderColor: alpha(p.main, 0.25),
+                bgcolor: alpha(p.main, 0.06),
+                color: p.dark ?? p.main,
+                fontSize: "1.5rem",
+                fontFamily: "serif",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "transform 150ms, box-shadow 150ms, background-color 150ms",
+                "&:hover": {
+                  transform: "scale(1.1)",
+                  boxShadow: `0 2px 12px ${alpha(p.main, 0.25)}`,
+                  bgcolor: alpha(p.main, 0.14),
+                },
+                "&:active": { transform: "scale(0.95)" },
+              }}
+            >
+              {k.character}
+            </ButtonBase>
+          );
+        })}
       </Box>
 
       {/* Flashcard overlay */}
