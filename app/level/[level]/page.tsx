@@ -6,17 +6,18 @@ import Typography from "@mui/material/Typography";
 import { kanjiList } from "@/app/data/kanji";
 import LevelView from "./LevelView";
 
-const LEVELS = ["n5", "n4", "n3", "n2", "n1"] as const;
+const LEVELS = ["n5", "n4", "n3", "n2", "n1", "all"] as const;
 type Level = (typeof LEVELS)[number];
 
-type MuiColor = "success" | "info" | "warning" | "secondary" | "error";
+type MuiColor = "success" | "info" | "warning" | "secondary" | "error" | "primary";
 
 const LEVEL_META: Record<Level, { label: string; description: string; color: MuiColor }> = {
-  n5: { label: "N5", description: "Beginner",          color: "success" },
-  n4: { label: "N4", description: "Elementary",        color: "info" },
-  n3: { label: "N3", description: "Intermediate",      color: "warning" },
-  n2: { label: "N2", description: "Upper Intermediate", color: "secondary" },
-  n1: { label: "N1", description: "Advanced",          color: "error" },
+  n5:  { label: "N5",  description: "Beginner",          color: "success" },
+  n4:  { label: "N4",  description: "Elementary",        color: "info" },
+  n3:  { label: "N3",  description: "Intermediate",      color: "warning" },
+  n2:  { label: "N2",  description: "Upper Intermediate", color: "secondary" },
+  n1:  { label: "N1",  description: "Advanced",          color: "error" },
+  all: { label: "All", description: "All Levels",        color: "primary" },
 };
 
 export function generateStaticParams() {
@@ -39,7 +40,7 @@ export default async function LevelPage({ params }: { params: Promise<{ level: s
 
   const lv = level as Level;
   const meta = LEVEL_META[lv];
-  const entries = kanjiList.filter((k) => k.jlpt === lv.toUpperCase());
+  const entries = lv === "all" ? kanjiList : kanjiList.filter((k) => k.jlpt === lv.toUpperCase());
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
